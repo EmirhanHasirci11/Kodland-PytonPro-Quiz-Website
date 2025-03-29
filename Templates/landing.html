@@ -1,0 +1,89 @@
+{% extends "layout.html" %}
+{% block title %} Kodland Quiz {% endblock title %}
+
+{% block content %}
+
+<body class="bg-light">
+    <div class="container py-5 d-flex justify-content-center">
+        <div class="card shadow p-4 w-100" style="max-width: 600px;">
+            {% if submitted %}
+            <!-- ✅ Sonuç Kartı -->
+
+            <h2 class="text-center mb-4">📝 Sınav Sonucunuz</h2>
+
+            <!-- Kullanıcının bu sınavda aldığı skor -->
+            <p class="fs-5 text-center  py-2 rounded">
+                Skorunuz: <strong class="text-success fw-bold " style="font-size: 36px;">{{ correct }}%</strong>
+            </p>
+
+            <!-- Kişisel yüksek skor -->
+            <p class="fs-6 text-center">
+                Kişisel Yüksek Skorunuz: <strong class="text-primary">{{ score if score is not none else 0 }}%</strong>
+            </p>
+
+            <!-- Genel yüksek skor -->
+            <p class="fs-6 text-center">
+                Genel Yüksek Skor: <strong class="text-dark">{{ highest_score if highest_score is not none else 0
+                    }}%</strong>
+            </p>
+            
+            <!-- Buton -->
+            <a href="{{ url_for('logout') }}" class="btn btn-success mt-4 w-100">Yeniden Dene</a>
+            {% else %}
+            <!-- ✅ Üst kısım: Başlık + skorlar -->
+            <h1 class="mb-5 text-center">Kodland Quiz</h1>
+            <div class="d-flex justify-content-end align-items-end mb-3">
+                <div class="text-end">
+                    <span class="d-block">
+                        Kişisel Yüksek Skor:
+                        <strong class="text-success">{{ score if score is not none else 0 }}%</strong>
+                    </span>
+                    <span class="d-block">
+                        Genel Yüksek Skor:
+                        <strong class="text-dark">{{ highest_score if highest_score is not none else 0 }}%</strong>
+                    </span>
+                </div>
+            </div>
+            {% if error %}
+            <div class="alert alert-danger mt-3 text-center" role="alert">
+                {{ error }}
+            </div>
+        {% endif %}
+            
+
+            <!-- ✅ Quiz Formu -->
+            <form action="/" method="POST">
+                <label for="username" class="form-label">Adınız:</label>
+                <input type="text" id="username" name="username" class="form-control mb-4" value="{{ username or '' }}"
+                    required>
+
+                {% for q in questions %}
+                <div class="mb-4">
+                    <p><strong>Soru {{ loop.index }}:</strong> {{ q.question }}</p>
+                    <div class="list-group">
+                        <label class="list-group-item">
+                            <input type="radio" name="q{{ q.id }}" value="A" class="form-check-input" required> {{
+                            q.option_a }}
+                        </label>
+                        <label class="list-group-item">
+                            <input type="radio" name="q{{ q.id }}" value="B" class="form-check-input"> {{ q.option_b }}
+                        </label>
+                        <label class="list-group-item">
+                            <input type="radio" name="q{{ q.id }}" value="C" class="form-check-input"> {{ q.option_c }}
+                        </label>
+                        <label class="list-group-item">
+                            <input type="radio" name="q{{ q.id }}" value="D" class="form-check-input"> {{ q.option_d }}
+                        </label>
+                    </div>
+                </div>
+                {% endfor %}
+
+                <button type="submit" class="btn btn-success w-100 mt-3">Gönder</button>
+            </form>
+            
+            {% endif %}
+           
+        </div>
+    </div>
+</body>
+{% endblock content %}
